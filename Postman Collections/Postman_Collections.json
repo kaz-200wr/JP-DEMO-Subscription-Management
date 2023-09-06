@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "6534e514-55dd-4ee7-99e0-21e0aef328ce",
 		"name": "Subscription Management - SM QuickStart JP",
-		"description": "This Collection contains sample usage of APIs related to Salesforce Subscription Management in the demo org for Japan.\n\n## Getting started\n\n1. Login to your Org and select Allow OAuth Username-Password Flows from Settings.\n    `https://help.salesforce.com/s/articleView?id=release-notes.rn_security_username-password_flow_blocked_by_default.htm&release=244&type=5`\n1. Fork this collection to your workspace.\n1. Open the `SM QuickStart JP Environment` Environment and click Duplicate from the right-click menu.\n1. Rename the duplicated environment for the Org you are now connecting to.\n1. Open your new Environment, fill in current value for `url`, `site (if needed)`, `username`, `password`, `clientId`, `clientSecret` and Save.\n1. Select this environment for Current environment from the top right of the screen.\n1. Click the collection and open `Authorization` tab.\n1. Scroll down, click `Get new accesses token` and proceed to the next.\n1. Click `Run folder` from the right-click menu of `JP-Set Variables [Run folder]`.",
+		"description": "This Collection contains sample usage of APIs related to Salesforce Subscription Management in the demo org for Japan.\n\n## Getting started\n\n1. Login to your Org and select Allow OAuth Username-Password Flows from Settings.  \n    `https://help.salesforce.com/s/articleView?id=release-notes.rn_security_username-password_flow_blocked_by_default.htm&release=244&type=5`\n2. Fork this collection to your workspace.\n3. Open the `SM QuickStart JP Environment` Environment and click Duplicate from the right-click menu.\n4. Rename the duplicated environment for the Org you are now connecting to.\n5. Open your new Environment, fill in current value for `url`, `site (if needed)`, `username`, `password`, `clientId`, `clientSecret` and Save.\n6. Select this environment for Current environment from the top right of the screen.\n7. Click the collection and open `Authorization` tab.\n8. Scroll down, click `Get new accesses token` and proceed to the next.\n9. Click `Run folder` from the right-click menu of `JP-Set Variables [Run folder]`.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
@@ -44,7 +44,7 @@
 							}
 						}
 					],
-					"_postman_id": "fe035c7a-d293-4507-ab26-c5274474ed7e",
+					"id": "fe035c7a-d293-4507-ab26-c5274474ed7e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -102,7 +102,7 @@
 							}
 						}
 					],
-					"_postman_id": "533c1e9b-8f42-406c-9d34-35376bc8c997",
+					"id": "533c1e9b-8f42-406c-9d34-35376bc8c997",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -189,7 +189,7 @@
 							}
 						}
 					],
-					"_postman_id": "d0468e09-7461-421e-8dae-2553d82c784b",
+					"id": "d0468e09-7461-421e-8dae-2553d82c784b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -258,7 +258,7 @@
 							}
 						}
 					],
-					"_postman_id": "f6088fc6-29f7-4138-99b4-1ff6ff1a2fa2",
+					"id": "f6088fc6-29f7-4138-99b4-1ff6ff1a2fa2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -331,7 +331,7 @@
 							}
 						}
 					],
-					"_postman_id": "c8f9ff8f-c5b3-47cb-b527-4bfe58c27041",
+					"id": "c8f9ff8f-c5b3-47cb-b527-4bfe58c27041",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -404,7 +404,7 @@
 							}
 						}
 					],
-					"_postman_id": "2b792617-1c6f-4209-b25d-8b8b5e285a1f",
+					"id": "2b792617-1c6f-4209-b25d-8b8b5e285a1f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -489,7 +489,7 @@
 							}
 						}
 					],
-					"_postman_id": "c05ad608-74e2-43dd-bb12-46851a299274",
+					"id": "c05ad608-74e2-43dd-bb12-46851a299274",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -562,7 +562,7 @@
 							}
 						}
 					],
-					"_postman_id": "84744441-e836-4e49-8de9-095749af8928",
+					"id": "84744441-e836-4e49-8de9-095749af8928",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -635,7 +635,7 @@
 							}
 						}
 					],
-					"_postman_id": "c7535c9a-cc2f-4e16-8bed-595b507ed7bf",
+					"id": "c7535c9a-cc2f-4e16-8bed-595b507ed7bf",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -724,7 +724,7 @@
 							}
 						}
 					],
-					"_postman_id": "9690457a-68f1-40fb-b5a0-158c924a4592",
+					"id": "9690457a-68f1-40fb-b5a0-158c924a4592",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -808,7 +808,7 @@
 							}
 						}
 					],
-					"_postman_id": "d09b2d5f-e458-4830-bde0-5eb9d08224cc",
+					"id": "d09b2d5f-e458-4830-bde0-5eb9d08224cc",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -877,7 +877,7 @@
 							}
 						}
 					],
-					"_postman_id": "eacda82b-f6cc-45fb-b664-8f98ca370f94",
+					"id": "eacda82b-f6cc-45fb-b664-8f98ca370f94",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -945,7 +945,7 @@
 							}
 						}
 					],
-					"_postman_id": "ad22bd1c-f1de-4c15-bda1-74064362fbec",
+					"id": "ad22bd1c-f1de-4c15-bda1-74064362fbec",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1012,7 +1012,7 @@
 							}
 						}
 					],
-					"_postman_id": "120b63ad-5f8e-4cc7-96db-6d6a624f793f",
+					"id": "120b63ad-5f8e-4cc7-96db-6d6a624f793f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1050,14 +1050,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "5f2ba8fc-0379-476c-90af-62378a3d8d02"
+			"id": "5f2ba8fc-0379-476c-90af-62378a3d8d02"
 		},
 		{
 			"name": "Assets",
 			"item": [
 				{
 					"name": "Create or update assets from an order",
-					"_postman_id": "d4ad0a84-2215-47fc-b4d3-2141a8db105b",
+					"id": "d4ad0a84-2215-47fc-b4d3-2141a8db105b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1080,7 +1080,7 @@
 				},
 				{
 					"name": "Create or update an asset from an order item",
-					"_postman_id": "c9cb53a9-90a3-4fc8-a079-2bbbd80a5205",
+					"id": "c9cb53a9-90a3-4fc8-a079-2bbbd80a5205",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1103,7 +1103,7 @@
 				},
 				{
 					"name": "Get Asset",
-					"_postman_id": "0a3128bf-68cc-425b-905f-5e831dc2c0e8",
+					"id": "0a3128bf-68cc-425b-905f-5e831dc2c0e8",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1144,7 +1144,7 @@
 				},
 				{
 					"name": "Initiate Cancel",
-					"_postman_id": "1086489d-b680-471d-b9b3-7cd8834cbdf7",
+					"id": "1086489d-b680-471d-b9b3-7cd8834cbdf7",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1162,8 +1162,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i5j00000EJtsYAAT\"\n    ]\n  },\n  \"cancellationDate\": \"2023-10-05T00:00:00-00:00\",\n  \"cancellationOutputType\": \"order\"\n}",
-							"options": {}
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i5j00000EJtsYAAT\"\n    ]\n  },\n  \"cancellationDate\": \"2023-10-05T00:00:00-00:00\",\n  \"cancellationOutputType\": \"order\"\n}"
 						},
 						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-cancellation",
 						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate%2Bcancellation\n- API Type: Connect REST API\n- Call Type: Asynchronous\n- Event: AssetCancelInitiatedEvent"
@@ -1172,7 +1171,7 @@
 				},
 				{
 					"name": "Initiate renewal",
-					"_postman_id": "b64822b5-9a37-4798-b912-011c0bff883b",
+					"id": "b64822b5-9a37-4798-b912-011c0bff883b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1190,8 +1189,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"assetIds\": {\n        \"assetIdArray\": [\n            \"02i5j00000EJu6HAAT\"\n        ]\n    }\n}",
-							"options": {}
+							"raw": "{\n    \"assetIds\": {\n        \"assetIdArray\": [\n            \"02i5j00000EJu6HAAT\"\n        ]\n    }\n}"
 						},
 						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-renewal",
 						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate%2Brenewal\n- API Type: Connect REST API\n- Call Type: Asynchronous\n- Event: AssetRenewInitiatedEvent"
@@ -1200,7 +1198,7 @@
 				},
 				{
 					"name": "Initiate amend quantity",
-					"_postman_id": "9faa5c10-51db-4080-af74-3723c0f0eb62",
+					"id": "9faa5c10-51db-4080-af74-3723c0f0eb62",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1218,8 +1216,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i2t000000tVMsAAM\"\n    ]\n  },\n  \"startDate\": \"2023-10-05T00:00:00-00:00\",\n  \"quantityChange\": 10,\n  \"amendmentOutputType\": \"order\"\n}",
-							"options": {}
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i2t000000tVMsAAM\"\n    ]\n  },\n  \"startDate\": \"2023-10-05T00:00:00-00:00\",\n  \"quantityChange\": 10,\n  \"amendmentOutputType\": \"order\"\n}"
 						},
 						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-amend-quantity",
 						"description": "- [https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate+amend+quantity](https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate+amend+quantity)\n    \n- API Type: Connect REST API\n    \n- Call Type: Asynchronous\n    \n- Event: AssetAmendInitiatedEvent"
@@ -1227,14 +1224,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "2889846d-6823-4a7e-bb07-dfcfd0d7a2f6"
+			"id": "2889846d-6823-4a7e-bb07-dfcfd0d7a2f6"
 		},
 		{
 			"name": "Billing",
 			"item": [
 				{
 					"name": "Create Billing Schedules from Order Item",
-					"_postman_id": "673afa48-d3c6-492f-99ad-c1c5bd41e070",
+					"id": "673afa48-d3c6-492f-99ad-c1c5bd41e070",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1275,7 +1272,7 @@
 							}
 						}
 					],
-					"_postman_id": "69a3dbee-d390-4b85-8ad8-4a723e0019c2",
+					"id": "69a3dbee-d390-4b85-8ad8-4a723e0019c2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1314,7 +1311,7 @@
 				},
 				{
 					"name": "Generate Invoice From Billing Schedules",
-					"_postman_id": "74ca2d11-b494-4107-b3b8-e7d91265bd38",
+					"id": "74ca2d11-b494-4107-b3b8-e7d91265bd38",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1336,14 +1333,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "6dc1df78-9b09-4a35-bfaf-26f25bdf3d3c"
+			"id": "6dc1df78-9b09-4a35-bfaf-26f25bdf3d3c"
 		},
 		{
 			"name": "BuyNow - Flow",
 			"item": [
 				{
 					"name": "Buy Now",
-					"_postman_id": "09033b82-79c9-4f50-ab55-37a3518433c2",
+					"id": "09033b82-79c9-4f50-ab55-37a3518433c2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1366,7 +1363,7 @@
 				},
 				{
 					"name": "Create Quote Flow",
-					"_postman_id": "20965975-69d8-4bf9-a0f3-46fe66756099",
+					"id": "20965975-69d8-4bf9-a0f3-46fe66756099",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1387,7 +1384,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "c230f5df-30b0-4dda-be40-e0967f9cd20e"
+			"id": "c230f5df-30b0-4dda-be40-e0967f9cd20e"
 		},
 		{
 			"name": "Credits",
@@ -1412,7 +1409,7 @@
 							}
 						}
 					],
-					"_postman_id": "3f6ef5f4-7f5e-4741-b0f6-e7dbcafd48c9",
+					"id": "3f6ef5f4-7f5e-4741-b0f6-e7dbcafd48c9",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1435,7 +1432,7 @@
 				},
 				{
 					"name": "Create a standalone credit memo",
-					"_postman_id": "8fcc0c59-0968-4b3e-8554-87cf22f5de00",
+					"id": "8fcc0c59-0968-4b3e-8554-87cf22f5de00",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1458,7 +1455,7 @@
 				},
 				{
 					"name": "Apply Standalone Credit Memo",
-					"_postman_id": "065dec12-f497-4d68-a3a0-d335f8be88c4",
+					"id": "065dec12-f497-4d68-a3a0-d335f8be88c4",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1481,7 +1478,7 @@
 				},
 				{
 					"name": "Unapply a credit memo",
-					"_postman_id": "b789505d-dba8-4286-946d-28173abf8915",
+					"id": "b789505d-dba8-4286-946d-28173abf8915",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1504,7 +1501,7 @@
 				},
 				{
 					"name": "Create and apply a credit memo",
-					"_postman_id": "8043ad12-3cb9-49ba-85e2-5f470dafde4e",
+					"id": "8043ad12-3cb9-49ba-85e2-5f470dafde4e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1527,7 +1524,7 @@
 				},
 				{
 					"name": "Void a posted invoice",
-					"_postman_id": "ccbb6742-7c47-47e7-bb8b-83c871757b1f",
+					"id": "ccbb6742-7c47-47e7-bb8b-83c871757b1f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1549,14 +1546,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "d10db08f-cbb0-4caf-a830-7c23f1e93507"
+			"id": "d10db08f-cbb0-4caf-a830-7c23f1e93507"
 		},
 		{
 			"name": "Invoices",
 			"item": [
 				{
 					"name": "Create Invoice From Order",
-					"_postman_id": "7760b110-8b9a-4efe-a78a-e923a8334bea",
+					"id": "7760b110-8b9a-4efe-a78a-e923a8334bea",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1597,7 +1594,7 @@
 							}
 						}
 					],
-					"_postman_id": "6bbb88ce-db3d-4198-90b7-5281eeea2c47",
+					"id": "6bbb88ce-db3d-4198-90b7-5281eeea2c47",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1637,7 +1634,7 @@
 				},
 				{
 					"name": "Link current Invoice to Current Order",
-					"_postman_id": "d2e66325-bc5c-41f4-967e-85bebd82b46f",
+					"id": "d2e66325-bc5c-41f4-967e-85bebd82b46f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1658,14 +1655,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "01a48678-e300-4d70-8b10-0b42b9a0635e"
+			"id": "01a48678-e300-4d70-8b10-0b42b9a0635e"
 		},
 		{
 			"name": "Invoices Scheduler",
 			"item": [
 				{
 					"name": "Invoice Recovery",
-					"_postman_id": "8ffa9ff0-3953-4bda-9e3e-978de6e33b38",
+					"id": "8ffa9ff0-3953-4bda-9e3e-978de6e33b38",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1686,7 +1683,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "135c2f40-7e60-46d6-be23-050b42d206cc"
+			"id": "135c2f40-7e60-46d6-be23-050b42d206cc"
 		},
 		{
 			"name": "Orders",
@@ -1716,7 +1713,7 @@
 							}
 						}
 					],
-					"_postman_id": "ecd45df8-5035-43f2-a950-376a5aaaaf8b",
+					"id": "ecd45df8-5035-43f2-a950-376a5aaaaf8b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1755,7 +1752,7 @@
 				},
 				{
 					"name": "Activate Order",
-					"_postman_id": "ba0d2200-5055-4e86-a380-0bd54f8bf64d",
+					"id": "ba0d2200-5055-4e86-a380-0bd54f8bf64d",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1805,7 +1802,7 @@
 							}
 						}
 					],
-					"_postman_id": "958bc938-5483-4cdb-bd62-b66fb5042972",
+					"id": "958bc938-5483-4cdb-bd62-b66fb5042972",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1827,7 +1824,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "7403f900-0b3c-4591-8e5a-3966dfc4e573"
+			"id": "7403f900-0b3c-4591-8e5a-3966dfc4e573"
 		},
 		{
 			"name": "Payment",
@@ -1862,7 +1859,7 @@
 							}
 						}
 					],
-					"_postman_id": "c202db27-6422-45ac-a716-d9ba8919a41c",
+					"id": "c202db27-6422-45ac-a716-d9ba8919a41c",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1930,7 +1927,7 @@
 							}
 						}
 					],
-					"_postman_id": "f356d0c1-f5f7-4b44-af22-39a2d40dee49",
+					"id": "f356d0c1-f5f7-4b44-af22-39a2d40dee49",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1964,7 +1961,7 @@
 							}
 						}
 					],
-					"_postman_id": "63060ede-eb44-4dd6-b245-12d0a4f33a35",
+					"id": "63060ede-eb44-4dd6-b245-12d0a4f33a35",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2003,7 +2000,7 @@
 							}
 						}
 					],
-					"_postman_id": "6a3502b7-e8d2-4e34-bee4-f978c9677072",
+					"id": "6a3502b7-e8d2-4e34-bee4-f978c9677072",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2026,7 +2023,7 @@
 				},
 				{
 					"name": "Apply Payment",
-					"_postman_id": "2ed1f6e9-b33a-402d-8707-87e544b2d51f",
+					"id": "2ed1f6e9-b33a-402d-8707-87e544b2d51f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2049,7 +2046,7 @@
 				},
 				{
 					"name": "Unapply Payment",
-					"_postman_id": "d95c03ff-1dfb-4b24-b607-e17766f771ee",
+					"id": "d95c03ff-1dfb-4b24-b607-e17766f771ee",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2088,7 +2085,7 @@
 							}
 						}
 					],
-					"_postman_id": "bc026b74-c953-4c11-9c50-73fa8d2699f5",
+					"id": "bc026b74-c953-4c11-9c50-73fa8d2699f5",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2110,7 +2107,7 @@
 				},
 				{
 					"name": "Apply Refund",
-					"_postman_id": "59156e67-9024-437a-9da7-b618e17bbbc0",
+					"id": "59156e67-9024-437a-9da7-b618e17bbbc0",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2133,7 +2130,7 @@
 				},
 				{
 					"name": "Authorize Payment",
-					"_postman_id": "7f733d05-3265-4dc7-84c7-6aca10a797f3",
+					"id": "7f733d05-3265-4dc7-84c7-6aca10a797f3",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2156,7 +2153,7 @@
 				},
 				{
 					"name": "Reverse Payment Authorization",
-					"_postman_id": "b9c28a1d-8321-4238-aab9-5b86cb6b4178",
+					"id": "b9c28a1d-8321-4238-aab9-5b86cb6b4178",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2178,7 +2175,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "364fe113-2502-4782-9272-fef87253aa34"
+			"id": "364fe113-2502-4782-9272-fef87253aa34"
 		},
 		{
 			"name": "Pricing",
@@ -2360,7 +2357,7 @@
 							}
 						}
 					],
-					"_postman_id": "71094f16-d10f-4aae-8054-565a0ab1b494",
+					"id": "71094f16-d10f-4aae-8054-565a0ab1b494",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2391,7 +2388,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "17a0ba6d-86de-4d35-be18-22f30cadd457"
+			"id": "17a0ba6d-86de-4d35-be18-22f30cadd457"
 		},
 		{
 			"name": "Products",
@@ -2461,7 +2458,7 @@
 							}
 						}
 					],
-					"_postman_id": "02e76ceb-2cf8-411a-ab6b-9f79c6717a0e",
+					"id": "02e76ceb-2cf8-411a-ab6b-9f79c6717a0e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2563,7 +2560,7 @@
 							}
 						}
 					],
-					"_postman_id": "3254a3a7-f04c-4e82-83af-ff6492968052",
+					"id": "3254a3a7-f04c-4e82-83af-ff6492968052",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2585,7 +2582,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "7c384933-0431-4857-8aab-7dcf47348b0a"
+			"id": "7c384933-0431-4857-8aab-7dcf47348b0a"
 		},
 		{
 			"name": "Quotes",
@@ -2622,7 +2619,7 @@
 							}
 						}
 					],
-					"_postman_id": "f75dc92f-60d3-4d93-bba2-72d59802cad4",
+					"id": "f75dc92f-60d3-4d93-bba2-72d59802cad4",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2683,7 +2680,7 @@
 							}
 						}
 					],
-					"_postman_id": "70ab0dec-c48f-4b4d-9a8c-dcc5563d65d2",
+					"id": "70ab0dec-c48f-4b4d-9a8c-dcc5563d65d2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2714,14 +2711,14 @@
 					"response": []
 				}
 			],
-			"_postman_id": "94cc84df-193d-4636-98b2-3b93ea658800"
+			"id": "94cc84df-193d-4636-98b2-3b93ea658800"
 		},
 		{
 			"name": "Error Logs",
 			"item": [
 				{
 					"name": "Get Revenue Transaction Errors",
-					"_postman_id": "9ea46155-3e31-41c2-b76b-c4399c274560",
+					"id": "9ea46155-3e31-41c2-b76b-c4399c274560",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2760,7 +2757,7 @@
 				},
 				{
 					"name": "Get Revenue Transaction Errors- All",
-					"_postman_id": "24188aab-5fee-4af9-bae0-fd954d981426",
+					"id": "24188aab-5fee-4af9-bae0-fd954d981426",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2798,7 +2795,7 @@
 					"response": []
 				}
 			],
-			"_postman_id": "f04698d6-de88-4578-87c9-9c72e808b72b"
+			"id": "f04698d6-de88-4578-87c9-9c72e808b72b"
 		}
 	],
 	"auth": {
@@ -2859,19 +2856,19 @@
 	],
 	"variable": [
 		{
-			"id": "dc0a85d8-84ae-480f-9754-d4562baec3df",
+			"id": "a6001fd7-3da2-41b1-80c3-c3501b403ceb",
 			"key": "TODAY_YYYY-MM-DD",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "667c3460-f508-4d87-931e-bbf307b36669",
+			"id": "bfb8f874-000b-484d-b207-180f4ba3ac31",
 			"key": "1Y_ENDDATE_YYYY-MM-DD",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "f473b3b6-f821-405e-8a01-aa69efc9108b",
+			"id": "bf312d0e-978c-4f46-80ed-891faf71719e",
 			"key": "NOW_DATETIME_ISO",
 			"value": "",
 			"type": "string"
