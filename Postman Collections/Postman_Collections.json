@@ -1,0 +1,2880 @@
+{
+	"info": {
+		"_postman_id": "6534e514-55dd-4ee7-99e0-21e0aef328ce",
+		"name": "Subscription Management - SM QuickStart JP",
+		"description": "This Collection contains sample usage of APIs related to Salesforce Subscription Management in the demo org for Japan.\n\n## Getting started\n\n1. Login to your Org and select Allow OAuth Username-Password Flows from Settings.\n    `https://help.salesforce.com/s/articleView?id=release-notes.rn_security_username-password_flow_blocked_by_default.htm&release=244&type=5`\n1. Fork this collection to your workspace.\n1. Open the `SM QuickStart JP Environment` Environment and click Duplicate from the right-click menu.\n1. Rename the duplicated environment for the Org you are now connecting to.\n1. Open your new Environment, fill in current value for `url`, `site (if needed)`, `username`, `password`, `clientId`, `clientSecret` and Save.\n1. Select this environment for Current environment from the top right of the screen.\n1. Click the collection and open `Authorization` tab.\n1. Scroll down, click `Get new accesses token` and proceed to the next.\n1. Click `Run folder` from the right-click menu of `JP-Set Variables [Run folder]`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "JP-Set Variables [Postman Runner]",
+			"item": [
+				{
+					"name": "User Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5f11a4dc-cb5b-4ecf-965f-c7c8b39a6494",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"Required fields are present\", function () {",
+									"    pm.expect(responseData.user_id).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.organization_id).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.name).to.exist.and.to.be.a('string');",
+									"    pm.expect(responseData.email).to.exist.and.to.match(/^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$/);",
+									"",
+									"    pm.environment.set(\"_userId\", responseData.user_id);",
+									"    pm.environment.set(\"_orgId\", responseData.organization_id);",
+									"    pm.environment.set(\"_userFullName\", responseData.name);",
+									"    pm.environment.set(\"_userEmail\", responseData.email);",
+									"",
+									"    console.log(`Set Env value - _userId: ${postman.getEnvironmentVariable(\"_userId\")}`);",
+									"    console.log(`Set Env value - _orgId: ${postman.getEnvironmentVariable(\"_orgId\")}`);",
+									"    console.log(`Set Env value - _userFullName: ${postman.getEnvironmentVariable(\"_userFullName\")}`);",
+									"    console.log(`Set Env value - _userEmail: ${postman.getEnvironmentVariable(\"_userEmail\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "fe035c7a-d293-4507-ab26-c5274474ed7e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": "{{url}}{{site}}/services/oauth2/userinfo"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Release Version",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e663a0ee-89ca-43f9-8b73-ef5ad7cf9851",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"",
+									"pm.test(\"Verify that the responseData is present and is array\", function () {",
+									"    responseData = pm.response.json();",
+									"    pm.expect(responseData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Verify that the version environment variable is set and not null\", function () {",
+									"    const latestVersion = responseData[responseData.length - 1];",
+									"    pm.expect(latestVersion.version).to.exist.and.to.not.be.null;",
+									"",
+									"    postman.setEnvironmentVariable(\"version\", latestVersion.version);",
+									"    console.log(`Set Env value - version: ${postman.getEnvironmentVariable(\"version\")}`);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5aed7b89-191c-4d55-9eb4-b017b8481171",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "533c1e9b-8f42-406c-9d34-35376bc8c997",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{accessToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/services/data/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e343f191-5348-483a-8985-f25ce15aa6aa",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"pm.test(\"Records array is present and contains at least one element\", function () {",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.be.at.least(1, \"Array should contain at least one element\");",
+									"});",
+									"",
+									"",
+									"const account = responseData.records[0];",
+									"pm.test(\"Required fields are present\", function () {",
+									"    pm.expect(account.Id).to.exist.and.to.not.be.null;",
+									"",
+									"    pm.expect(account.ShippingCountry).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.ShippingState).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.ShippingCity).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.ShippingStreet).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.ShippingPostalCode).to.exist.and.to.not.be.null;",
+									"",
+									"    pm.expect(account.BillingCountry).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.BillingState).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.BillingCity).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.BillingStreet).to.exist.and.to.not.be.null;",
+									"    pm.expect(account.BillingPostalCode).to.exist.and.to.not.be.null;",
+									"",
+									"    postman.setEnvironmentVariable(\"defaultAccountId\", account.Id);",
+									"    console.log(`Set Env value - defaultAccountId: ${postman.getEnvironmentVariable(\"defaultAccountId\")}`);",
+									"",
+									"    postman.setEnvironmentVariable(\"defaultAccountShippingCountry\", account.ShippingCountry);",
+									"    postman.setEnvironmentVariable(\"defaultAccountShippingState\", account.ShippingState);",
+									"    postman.setEnvironmentVariable(\"defaultAccountShippingCity\", account.ShippingCity);",
+									"    postman.setEnvironmentVariable(\"defaultAccountShippingStreet\", account.ShippingStreet);",
+									"    postman.setEnvironmentVariable(\"defaultAccountShippingPostalCode\", account.ShippingPostalCode);",
+									"",
+									"    console.log(`Set Env value - defaultAccountShippingCountry: ${postman.getEnvironmentVariable(\"defaultAccountShippingCountry\")}`);",
+									"    console.log(`Set Env value - defaultAccountShippingState: ${postman.getEnvironmentVariable(\"defaultAccountShippingState\")}`);",
+									"    console.log(`Set Env value - defaultAccountShippingCity: ${postman.getEnvironmentVariable(\"defaultAccountShippingCity\")}`);",
+									"    console.log(`Set Env value - defaultAccountShippingStreet: ${postman.getEnvironmentVariable(\"defaultAccountShippingStreet\")}`);",
+									"    console.log(`Set Env value - defaultAccountShippingPostalCode: ${postman.getEnvironmentVariable(\"defaultAccountShippingPostalCode\")}`);",
+									"",
+									"    postman.setEnvironmentVariable(\"defaultAccountBillingCountry\", account.BillingCountry);",
+									"    postman.setEnvironmentVariable(\"defaultAccountBillingState\", account.BillingState);",
+									"    postman.setEnvironmentVariable(\"defaultAccountBillingCity\", account.BillingCity);",
+									"    postman.setEnvironmentVariable(\"defaultAccountBillingStreet\", account.BillingStreet);",
+									"    postman.setEnvironmentVariable(\"defaultAccountBillingPostalCode\", account.BillingPostalCode);",
+									"",
+									"    console.log(`Set Env value - defaultAccountBillingCountry: ${postman.getEnvironmentVariable(\"defaultAccountBillingCountry\")}`);",
+									"    console.log(`Set Env value - defaultAccountBillingState: ${postman.getEnvironmentVariable(\"defaultAccountBillingState\")}`);",
+									"    console.log(`Set Env value - defaultAccountBillingCity: ${postman.getEnvironmentVariable(\"defaultAccountBillingCity\")}`);",
+									"    console.log(`Set Env value - defaultAccountBillingStreet: ${postman.getEnvironmentVariable(\"defaultAccountBillingStreet\")}`);",
+									"    console.log(`Set Env value - defaultAccountBillingPostalCode: ${postman.getEnvironmentVariable(\"defaultAccountBillingPostalCode\")}`);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "d0468e09-7461-421e-8dae-2553d82c784b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT BillingPostalCode, BillingCountry, Id, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, BillingStreet, BillingCity, BillingState, Name FROM Account Where name='{{defaultAccountName}}' LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT BillingPostalCode, BillingCountry, Id, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, BillingStreet, BillingCity, BillingState, Name FROM Account Where name='{{defaultAccountName}}' LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Billing Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5f189f11-fb40-41a9-b128-ee30c67c829c",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"let responseData;",
+									"pm.test(\"Validate that 'records' is an array with at least one element\", function () {",
+									"    responseData = pm.response.json();",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array').with.lengthOf.at.least(1);",
+									"});",
+									"",
+									"pm.test(\"Validate that 'Id' field is a non-empty string\", function () {",
+									"    const contact = responseData.records[0];",
+									"",
+									"    pm.expect(contact).to.be.an('object');",
+									"    pm.expect(contact.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"",
+									"    postman.setEnvironmentVariable(\"defaultBillToContactId\", contact.Id);",
+									"    console.log(`Set Env value - defaultBillToContactId: ${postman.getEnvironmentVariable(\"defaultBillToContactId\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "f6088fc6-29f7-4138-99b4-1ff6ff1a2fa2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name from Contact Where AccountId='{{defaultAccountId}}' AND Name='{{defaultContactName}}' LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name from Contact Where AccountId='{{defaultAccountId}}' AND Name='{{defaultContactName}}' LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Standard Pricebook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4562a8e-6829-4c70-bfbd-4d4bb6fdb100",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let pb;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    pb = responseData.records[0];",
+									"});",
+									"",
+									"pm.test(\"Validate record object has the required field - Id\", function () {",
+									"    pm.expect(pb).to.be.an('object');",
+									"    pm.expect(pb.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    postman.setEnvironmentVariable(\"standardPricebookId\", pb.Id);",
+									"    console.log(`Set Env value - standardPricebookId: ${postman.getEnvironmentVariable(\"standardPricebookId\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "c8f9ff8f-c5b3-47cb-b527-4bfe58c27041",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name from Pricebook2 Where name='{{standardPricebookName}}' and IsActive = true",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name from Pricebook2 Where name='{{standardPricebookName}}' and IsActive = true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Candidate Pricebook",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "01a13897-bb01-4e65-a43c-d20d5dc019df",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let pb;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    pb = responseData.records[0];",
+									"});",
+									"",
+									"pm.test(\"Validate record object has the required field - Id\", function () {",
+									"    pm.expect(pb).to.be.an('object');",
+									"    pm.expect(pb.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    postman.setEnvironmentVariable(\"defaultPricebookId\", pb.Id);",
+									"    console.log(`Set Env value - defaultPricebookId: ${postman.getEnvironmentVariable(\"defaultPricebookId\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "2b792617-1c6f-4209-b25d-8b8b5e285a1f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name from Pricebook2 Where name='{{defaultPricebookName}}' and IsActive = true",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name from Pricebook2 Where name='{{defaultPricebookName}}' and IsActive = true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Tax Treatment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93bbb3df-3199-4a49-942f-80f1ff1499e5",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let tt;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    tt = responseData.records[0];",
+									"});",
+									"",
+									"pm.test(\"Validate record object has the required field - Id\", function () {",
+									"    pm.expect(tt).to.be.an('object');",
+									"    pm.expect(tt.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    postman.setEnvironmentVariable(\"defaultTaxTreatment\", tt.Id);",
+									"    console.log(`Set Env value - defaultTaxTreatment: ${postman.getEnvironmentVariable(\"defaultTaxTreatment\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5aef0d0a-879e-4296-aa3d-a5b1fb70ef47",
+								"exec": [
+									"const _defaultTaxTreatmentNameEncorded = encodeURIComponent(postman.getEnvironmentVariable(\"defaultTaxTreatmentName\"))",
+									"postman.setEnvironmentVariable(\"_defaultTaxTreatmentNameEncorded\", _defaultTaxTreatmentNameEncorded);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "c05ad608-74e2-43dd-bb12-46851a299274",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name from TaxTreatment Where name = '{{_defaultTaxTreatmentNameEncorded}}'",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name from TaxTreatment Where name = '{{_defaultTaxTreatmentNameEncorded}}'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Payment Gateway",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "58029406-0ab5-49ea-b21e-eed9c423ed6c",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let pg;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    pg = responseData.records[0];",
+									"});",
+									"",
+									"pm.test(\"Validate record object has the required field - Id\", function () {",
+									"    pm.expect(pg).to.be.an('object');",
+									"    pm.expect(pg.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    postman.setEnvironmentVariable(\"defaultPaymentGatewayId\", pg.Id);",
+									"    console.log(`Set Env value - defaultPaymentGatewayId: ${postman.getEnvironmentVariable(\"defaultPaymentGatewayId\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "84744441-e836-4e49-8de9-095749af8928",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, PaymentGatewayName from PaymentGateway Where PaymentGatewayName='{{defaultPaymentGatewayName}}' and Status='Active'",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, PaymentGatewayName from PaymentGateway Where PaymentGatewayName='{{defaultPaymentGatewayName}}' and Status='Active'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Payment Term",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f79d89fb-7aa4-4042-a7e2-b53f98755f5e",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let pt;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    pt = responseData.records[0];",
+									"});",
+									"",
+									"pm.test(\"Validate record object has the required field - Id\", function () {",
+									"    pm.expect(pt).to.be.an('object');",
+									"    pm.expect(pt.Id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    postman.setEnvironmentVariable(\"defaultPaymentTerm\", pt.Id);",
+									"    console.log(`Set Env value - defaultPaymentTerm: ${postman.getEnvironmentVariable(\"defaultPaymentTerm\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "c7535c9a-cc2f-4e16-8bed-595b507ed7bf",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name, IsDefault from PaymentTerm Where Name='{{defaultPaymentTermName}}' and IsDefault=true and Status='Active'",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name, IsDefault from PaymentTerm Where Name='{{defaultPaymentTermName}}' and IsDefault=true and Status='Active'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49573947-66bb-444a-8b73-c7bc7580ae5a",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"let products;",
+									"pm.test(\"Validate the records array with length=3 in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records).to.have.lengthOf.at.least(3);",
+									"    products = responseData.records;",
+									"});",
+									"",
+									"let productCode = '';",
+									"pm.test(\"Validate the records has ONETIME product\", function () {",
+									"    productCode = postman.getEnvironmentVariable(\"defaultOneTimeProductCode\")",
+									"    const onetimeProducts = products.filter(p => p.ProductCode === productCode);",
+									"    pm.expect(onetimeProducts).to.have.lengthOf.at.least(1);",
+									"    postman.setEnvironmentVariable(\"defaultOneTimeProductId\", onetimeProducts[0].Id);",
+									"    postman.setEnvironmentVariable(\"defaultOneTimePSM\", onetimeProducts[0].PricebookEntries.records[0].ProductSellingModelId);",
+									"    postman.setEnvironmentVariable(\"defaultOneTimePBE\", onetimeProducts[0].PricebookEntries.records[0].Id);",
+									"    console.log(`Set Env value - defaultOneTimeProductId: ${postman.getEnvironmentVariable(\"defaultOneTimeProductId\")}`);",
+									"    console.log(`Set Env value - defaultOneTimePSM: ${postman.getEnvironmentVariable(\"defaultOneTimePSM\")}`);",
+									"    console.log(`Set Env value - defaultOneTimePBE: ${postman.getEnvironmentVariable(\"defaultOneTimePBE\")}`);",
+									"});",
+									"pm.test(\"Validate the records has Evergreen product\", function () {",
+									"    productCode = postman.getEnvironmentVariable(\"defaultEvergreenProductCode\")",
+									"    const evergreenProducts = products.filter(p => p.ProductCode === productCode);",
+									"    pm.expect(evergreenProducts).to.have.lengthOf.at.least(1);",
+									"    postman.setEnvironmentVariable(\"defaultEvergreenProductId\", evergreenProducts[0].Id);",
+									"    postman.setEnvironmentVariable(\"defaultEvergreenPSM\", evergreenProducts[0].PricebookEntries.records[0].ProductSellingModelId);",
+									"    postman.setEnvironmentVariable(\"defaultEvergreenPBE\", evergreenProducts[0].PricebookEntries.records[0].Id);",
+									"    console.log(`Set Env value - defaultEvergreenProductId: ${postman.getEnvironmentVariable(\"defaultEvergreenProductId\")}`);",
+									"    console.log(`Set Env value - defaultEvergreenPSM: ${postman.getEnvironmentVariable(\"defaultEvergreenPSM\")}`);",
+									"    console.log(`Set Env value - defaultEvergreenPBE: ${postman.getEnvironmentVariable(\"defaultEvergreenPBE\")}`);",
+									"});",
+									"pm.test(\"Validate the records has Term Monthly product\", function () {",
+									"    productCode = postman.getEnvironmentVariable(\"defaultTermMonthlyProductCode\")",
+									"    const termMonthlyProducts = products.filter(p => p.ProductCode === productCode);",
+									"    pm.expect(termMonthlyProducts).to.have.lengthOf.at.least(1);",
+									"    postman.setEnvironmentVariable(\"defaultTermMonthlyProductId\", termMonthlyProducts[0].Id);",
+									"    postman.setEnvironmentVariable(\"defaultTermMonthlyPSM\", termMonthlyProducts[0].PricebookEntries.records[0].ProductSellingModelId);",
+									"    postman.setEnvironmentVariable(\"defaultTermMonthlyPBE\", termMonthlyProducts[0].PricebookEntries.records[0].Id);",
+									"    console.log(`Set Env value - defaultTermMonthlyProductId: ${postman.getEnvironmentVariable(\"defaultTermMonthlyProductId\")}`);",
+									"    console.log(`Set Env value - defaultTermMonthlyPSM: ${postman.getEnvironmentVariable(\"defaultTermMonthlyPSM\")}`);",
+									"    console.log(`Set Env value - defaultTermMonthlyPBE: ${postman.getEnvironmentVariable(\"defaultTermMonthlyPBE\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "9690457a-68f1-40fb-b5a0-158c924a4592",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Name, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, TaxPolicyId, BillingPolicyId, (Select Id, Name,UnitPrice, Pricebook2Id, ProductSellingModelId, ProductSellingModel.Name, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, ProductSellingModel.SellingModelType  From PricebookEntries Where Pricebook2Id = '{{defaultPricebookId}}' AND IsActive=true) from Product2 Where IsActive = true AND TaxPolicyId != null AND BillingPolicyId != null AND ProductCode in ('{{defaultOneTimeProductCode}}', '{{defaultEvergreenProductCode}}', '{{defaultTermMonthlyProductCode}}') order by Name ASC",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id, Name, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, TaxPolicyId, BillingPolicyId, (Select Id, Name,UnitPrice, Pricebook2Id, ProductSellingModelId, ProductSellingModel.Name, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, ProductSellingModel.SellingModelType  From PricebookEntries Where Pricebook2Id = '{{defaultPricebookId}}' AND IsActive=true) from Product2 Where IsActive = true AND TaxPolicyId != null AND BillingPolicyId != null AND ProductCode in ('{{defaultOneTimeProductCode}}', '{{defaultEvergreenProductCode}}', '{{defaultTermMonthlyProductCode}}') order by Name ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Tax Engine Adapter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40a0fd06-a4fe-4906-a771-1209e9fc830e",
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// postman.setEnvironmentVariable(\"taxAdapterClassId\", jsonData.records[0].Id);",
+									"// postman.setEnvironmentVariable(\"taxAdapterClassName\", jsonData.records[0].Name);",
+									"",
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"let apexClasses;",
+									"pm.test(\"Validate the records array with length=1 in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records).to.have.lengthOf.at.least(1);",
+									"    apexClasses = responseData.records;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate Id and Name are non-empty strings\", function () {",
+									"    const adapter = apexClasses[0];",
+									"    pm.expect(adapter).to.be.an('object');",
+									"    pm.expect(adapter.Id).to.exist;",
+									"    pm.expect(adapter.Name).to.exist;",
+									"",
+									"    postman.setEnvironmentVariable(\"taxAdapterClassId\", adapter.Id);",
+									"    // postman.setEnvironmentVariable(\"taxAdapterClassName\", adapter.Name);",
+									"    console.log(`Set Env value - taxAdapterClassId: ${postman.getEnvironmentVariable(\"taxAdapterClassId\")}`);",
+									"    // console.log(`Set Env value - taxAdapterClassName: ${postman.getEnvironmentVariable(\"taxAdapterClassName\")}`);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "d09b2d5f-e458-4830-bde0-5eb9d08224cc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, Name FROM ApexClass WHERE Name='{{defaultTaxEngineAdapterName}}' limit 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, Name FROM ApexClass WHERE Name='{{defaultTaxEngineAdapterName}}' limit 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Tax Engine Provider",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f854b994-8336-47dc-b162-e5209e56b477",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the presence and number of elements in the 'records' array\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"The 'records' array should contain 1 element\");",
+									"",
+									"    const taxEngineProvider = responseData.records[0];",
+									"",
+									"    pm.expect(taxEngineProvider.Id).to.exist;",
+									"    postman.setEnvironmentVariable(\"taxEngineProviderId\", taxEngineProvider.Id);",
+									"    console.log(`Set Env value - taxEngineProviderId: ${postman.getEnvironmentVariable(\"taxEngineProviderId\")}`);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "eacda82b-f6cc-45fb-b664-8f98ca370f94",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, DeveloperName FROM TaxEngineProvider WHERE DeveloperName='{{defaultTaxEngineProviderName}}' LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, DeveloperName FROM TaxEngineProvider WHERE DeveloperName='{{defaultTaxEngineProviderName}}' LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Tax MerchantId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e1bb12fb-9353-455a-9728-40c1569cf941",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the presence and length of the 'records' array\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records).to.have.lengthOf(1, \"Expected number of elements is 1\");",
+									"",
+									"",
+									"    const taxMerchant = responseData.records[0];",
+									"",
+									"    pm.expect(taxMerchant.Id).to.exist;",
+									"    postman.setEnvironmentVariable(\"taxMerchantId\", taxMerchant.Id);",
+									"    console.log(`Set Env value - taxMerchantId: ${postman.getEnvironmentVariable(\"taxMerchantId\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "ad22bd1c-f1de-4c15-bda1-74064362fbec",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, DeveloperName FROM NamedCredential WHERE DeveloperName='{{defaultNamedCredentialName}}' LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, DeveloperName FROM NamedCredential WHERE DeveloperName='{{defaultNamedCredentialName}}' LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Default Tax EngineId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "44157a46-637e-4666-b5c5-fc8e83d1e1d7",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the presence and length of the 'records' array\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.records).to.have.lengthOf(1, \"Expected number of elements is 1\");",
+									"",
+									"    const taxEngine = responseData.records[0];",
+									"",
+									"    pm.expect(taxEngine.Id).to.exist;",
+									"    postman.setEnvironmentVariable(\"defaultTaxEngineId\", taxEngine.Id);",
+									"    console.log(`Set Env value - defaultTaxEngineId: ${postman.getEnvironmentVariable(\"defaultTaxEngineId\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "120b63ad-5f8e-4cc7-96db-6d6a624f793f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, TaxEngineName FROM TaxEngine WHERE TaxEngineName='{{defaultTaxEngineName}}' LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, TaxEngineName FROM TaxEngine WHERE TaxEngineName='{{defaultTaxEngineName}}' LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "5f2ba8fc-0379-476c-90af-62378a3d8d02"
+		},
+		{
+			"name": "Assets",
+			"item": [
+				{
+					"name": "Create or update assets from an order",
+					"_postman_id": "d4ad0a84-2215-47fc-b4d3-2141a8db105b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"orderId\": \"{{currentOrderId}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/actions/standard/createOrUpdateAssetFromOrder",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Create%2Bor%2Bupdate%2Bassets%2Bfrom%2Ban%2Border\n- API Type: Invocable action\n- Call Type: Asynchronous\n- Event: CreateAssetOrderEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Create or update an asset from an order item",
+					"_postman_id": "c9cb53a9-90a3-4fc8-a079-2bbbd80a5205",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"orderItemIds\": [\n                \"8015j0000021W7zAAE\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/actions/standard/createOrUpdateAssetFromOrderItem",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Create%2Bor%2Bupdate%2Ban%2Basset%2Bfrom%2Ban%2Border%2Bitem\n- API Type: Invocable action\n- Call Type: Synchronous\n- Event: AssetOrderCreatedEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Asset",
+					"_postman_id": "0a3128bf-68cc-425b-905f-5e831dc2c0e8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/query/?q=SELECT+Id+from+Asset+WHERE+AccountId='{{defaultAccountId}}'",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query",
+								""
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT+Id+from+Asset+WHERE+AccountId='{{defaultAccountId}}'",
+									"description": "A SOQL query. Note that you will need to replace spaces with “+” characters in your query string to create a valid URI. An example query parameter string might look like: “SELECT+Name+FROM+MyObject”. If the SOQL query string is invalid, a MALFORMED_QUERY response is returned."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Initiate Cancel",
+					"_postman_id": "1086489d-b680-471d-b9b3-7cd8834cbdf7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i5j00000EJtsYAAT\"\n    ]\n  },\n  \"cancellationDate\": \"2023-10-05T00:00:00-00:00\",\n  \"cancellationOutputType\": \"order\"\n}",
+							"options": {}
+						},
+						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-cancellation",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate%2Bcancellation\n- API Type: Connect REST API\n- Call Type: Asynchronous\n- Event: AssetCancelInitiatedEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Initiate renewal",
+					"_postman_id": "b64822b5-9a37-4798-b912-011c0bff883b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"assetIds\": {\n        \"assetIdArray\": [\n            \"02i5j00000EJu6HAAT\"\n        ]\n    }\n}",
+							"options": {}
+						},
+						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-renewal",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate%2Brenewal\n- API Type: Connect REST API\n- Call Type: Asynchronous\n- Event: AssetRenewInitiatedEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Initiate amend quantity",
+					"_postman_id": "9faa5c10-51db-4080-af74-3723c0f0eb62",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02i2t000000tVMsAAM\"\n    ]\n  },\n  \"startDate\": \"2023-10-05T00:00:00-00:00\",\n  \"quantityChange\": 10,\n  \"amendmentOutputType\": \"order\"\n}",
+							"options": {}
+						},
+						"url": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-amend-quantity",
+						"description": "- [https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate+amend+quantity](https://developer.salesforce.com/docs/revenue/subscription-management/references/assets?meta=Initiate+amend+quantity)\n    \n- API Type: Connect REST API\n    \n- Call Type: Asynchronous\n    \n- Event: AssetAmendInitiatedEvent"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "2889846d-6823-4a7e-bb07-dfcfd0d7a2f6"
+		},
+		{
+			"name": "Billing",
+			"item": [
+				{
+					"name": "Create Billing Schedules from Order Item",
+					"_postman_id": "673afa48-d3c6-492f-99ad-c1c5bd41e070",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"orderItemIds\": {{currentOrderItems}}\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/actions/standard/createBillingScheduleFromOrderItem",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/billing?meta=Create%2Bbilling%2Bschedules%2Bfrom%2Border%2Bitems\n- API Type: Invocable action\n- Call Type: Asynchronous\n- Event: BillingScheduleCreatedEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Billing Schedules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0830dd4-aeed-4451-a928-21f1b2a28d0e",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentBillingSchedules = responseData.records.map(bs => bs.Id);",
+									"    postman.setEnvironmentVariable(\"currentBillingSchedules\", JSON.stringify(currentBillingSchedules));",
+									"    console.log(`Set Env value - currentBillingSchedules: ${postman.getEnvironmentVariable(\"currentBillingSchedules\")}`)",
+									"",
+									"}catch(error){}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "69a3dbee-d390-4b85-8ad8-4a723e0019c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/query?q=Select Id from BillingSchedule Where ReferenceEntityId = '{{currentOrderId}}' AND Status = 'ReadyForInvoicing'",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id from BillingSchedule Where ReferenceEntityId = '{{currentOrderId}}' AND Status = 'ReadyForInvoicing'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Invoice From Billing Schedules",
+					"_postman_id": "74ca2d11-b494-4107-b3b8-e7d91265bd38",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"billingScheduleIds\": {{currentBillingSchedules}},\n    \"action\": \"Posted\",\n    \"targetDate\": \"{{TODAY_YYYY-MM-DD}}\",\n    \"invoiceDate\": \"{{TODAY_YYYY-MM-DD}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/invoices/collection/actions/generate",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/billing?meta=Create%2Binvoices%2Bfrom%2Bbilling%2Bschedules\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "6dc1df78-9b09-4a35-bfaf-26f25bdf3d3c"
+		},
+		{
+			"name": "BuyNow - Flow",
+			"item": [
+				{
+					"name": "Buy Now",
+					"_postman_id": "09033b82-79c9-4f50-ab55-37a3518433c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"paymentMethodId\": \"{{defaultPaymentMethodId}}\",\n            \"GatewayId\": \"{{defaultPaymentGatewayId}}\",\n            \"order\": {\n                \"attributes\": {\n                    \"type\": \"Order\"\n                },\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                \"Pricebook2Id\": \"{{defaultPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"CurrencyIsoCode\": \"JPY\",\n                \"ShippingCountry\": \"{{defaultAccountShippingCountry}}\",\n                \"ShippingState\": \"{{defaultAccountShippingState}}\",\n                \"ShippingCity\": \"{{defaultAccountShippingCity}}\",\n                \"ShippingStreet\": \"{{defaultAccountShippingStreet}}\",\n                \"ShippingPostalCode\": \"{{defaultAccountShippingPostalCode}}\",\n                \"BillingCountry\": \"{{defaultAccountBillingCountry}}\",\n                \"BillingState\": \"{{defaultAccountBillingState}}\",\n                \"BillingCity\": \"{{defaultAccountBillingCity}}\",\n                \"BillingStreet\": \"{{defaultAccountBillingStreet}}\",\n                \"BillingPostalCode\": \"{{defaultAccountBillingPostalCode}}\",\n                \"Status\": \"Draft\"\n            },\n            \"orderItems\": [\n                {\n                    \"attributes\": {\n                        \"type\": \"OrderItem\"\n                    },\n                    \"PricebookEntryId\": \"{{defaultEvergreenPBE}}\",\n                    \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                    \"Quantity\": 5,\n                    \"UnitPrice\": 10000,\n                    \"NetUnitPrice\": 10000,\n                    \"ListPriceTotal\": 50000,\n                    \"TotalLineAmount\": 50000,\n                    \"PeriodBoundary\": \"Anniversary\",\n                    \"BillingFrequency2\": \"Monthly\",\n                    \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n                },\n                {\n                    \"attributes\": {\n                        \"type\": \"OrderItem\"\n                    },\n                    \"PricebookEntryId\": \"{{defaultOneTimePBE}}\",\n                    \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                    \"Quantity\": 5,\n                    \"UnitPrice\": 100000,\n                    \"NetUnitPrice\": 100000,\n                    \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n                },\n                {\n                    \"attributes\": {\n                        \"type\": \"OrderItem\"\n                    },\n                    \"PricebookEntryId\": \"{{defaultTermMonthlyPBE}}\",\n                    \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                    \"EndDate\": \"{{1Y_ENDDATE_YYYY-MM-DD}}\",\n                    \"PricingTermCount\": 12,\n                    \"Quantity\": 5,\n                    \"UnitPrice\": 50000,\n                    \"NetUnitPrice\": 50000,\n                    \"TotalLineAmount\": 3000000,\n                    \"PeriodBoundary\": \"Anniversary\",\n                    \"BillingFrequency2\": \"Monthly\",\n                    \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/actions/custom/flow/{{buyNowFlowApiName}}",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/buy-now?meta=Invoke%2Bthe%2Bbuy%2Bnow%2Bflow\n- API Type: Invocable action\n- Call Type: Asynchronous\n- Event: CreateAssetOrderEvent, BillingScheduleCreatedEvent, InvoiceProcessedEvent, PaymentCreationEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Quote Flow",
+					"_postman_id": "20965975-69d8-4bf9-a0f3-46fe66756099",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"inputs\":[\n      {\n         \"quote\":{\n            \"AccountId\":\"0018c00002CJGyJAAX\",\n            \"Pricebook2Id\":\"01s8c000005odxPAAQ\",\n            \"SM_Status__c\":\"Draft\",\n            \"Status\":\"Draft\",\n            \"attributes\":{\n               \"type\":\"Quote\"\n            }\n         },\n         \"quoteLineItems\":[\n            {\n               \"PricebookEntryId\":\"01u8c00000FW9GfAAL\",\n               \"Quantity\":1,\n               \"UnitPrice\":25000,\n               \"attributes\":{\n                  \"type\":\"QuoteLineItem\"\n               }\n            }\n         ]\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/actions/custom/flow/SM_Create_Quote_and_Quote_Line_Items"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "c230f5df-30b0-4dda-be40-e0967f9cd20e"
+		},
+		{
+			"name": "Credits",
+			"item": [
+				{
+					"name": "Create a credit memo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5bb4b7a5-a1a3-4f31-bdd6-3518ce18d87f",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentCreditMemoId = responseData.creditMemos[0].id;",
+									"    postman.setEnvironmentVariable(\"currentCreditMemoId\", currentCreditMemoId);",
+									"    console.log(`Set Env value - currentCreditMemoId: ${postman.getEnvironmentVariable(\"currentCreditMemoId\")}`)",
+									"",
+									"}catch(error){}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "3f6ef5f4-7f5e-4741-b0f6-e7dbcafd48c9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"creditMemos\": [\n        {\n            \"billingAccountId\": \"{{defaultAccountId}}\",\n            \"status\": \"Posted\",\n            \"creditDate\": \"{{NOW_DATETIME_ISO}}\",\n            \"description\": \"Credit memo.\",\n            \"charges\": [\n                {\n                    \"name\": \"Monthly term\",\n                    \"chargeAmount\": 5000,\n                    \"productId\": \"{{defaultTermMonthlyProductId}}\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/credit-memos",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Create%2Ba%2Bcredit%2Bmemo\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a standalone credit memo",
+					"_postman_id": "8fcc0c59-0968-4b3e-8554-87cf22f5de00",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"billingAccountId\": \"{{defaultAccountId}}\",\n    \"type\": \"Posted\",\n    \"effectiveDate\": \"{{TODAY_YYYY-MM-DD}}\",\n    \"description\": \"Standalone Credit memo.\",\n    \"taxStrategy\": \"IGNORE\",\n    \"charges\": [\n        {\n            \"chargeAmount\": 2000,\n            \"productId\": \"{{defaultTermMonthlyProductId}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/credit-memos/actions/generate",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Create%2Ba%2Bstandalone%2Bcredit%2Bmemo\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Standalone Credit Memo",
+					"_postman_id": "065dec12-f497-4d68-a3a0-d335f8be88c4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"applications\": [\n        {\n            \"appliedToId\": \"{{currentInvoiceId}}\",\n            \"amount\": \"3000\",\n            \"description\": \"クレジットメモ 1000 を適用\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/credit-memos/{{currentCreditMemoId}}/actions/apply",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Apply%2Ba%2Bcredit%2Bmemo\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Unapply a credit memo",
+					"_postman_id": "b789505d-dba8-4286-946d-28173abf8915",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"effectiveDate\": \"{{TODAY_YYYY-MM-DD}}\",\n  \"description\": \"適用解除\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/credit-memo-inv-applications/{{creditMemoInvoiceApplicationId}}/actions/unapply",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Unapply%2Ba%2Bcredit%2Bmemo\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Create and apply a credit memo",
+					"_postman_id": "8043ad12-3cb9-49ba-85e2-5f470dafde4e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"POSTED\",\n    \"taxStrategy\": \"Ignore\",\n    \"invoiceLines\": [\n        {\n            \"invoiceLineId\": \"5TV5j000000g3jBGAQ\",\n            \"amountToCredit\": \"10000\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/invoices/{{currentInvoiceId}}/actions/credit",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Create%2Band%2Bapply%2Ba%2Bcredit%2Bmemo\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Void a posted invoice",
+					"_postman_id": "ccbb6742-7c47-47e7-bb8b-83c871757b1f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/invoicing/invoices/{{currentInvoiceId}}/actions/void",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/credit?meta=Void%2Ba%2Bposted%2Binvoice\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: VoidInvoiceProcessedEvent"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "d10db08f-cbb0-4caf-a830-7c23f1e93507"
+		},
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "Create Invoice From Order",
+					"_postman_id": "7760b110-8b9a-4efe-a78a-e923a8334bea",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"inputs\": [\n    {\n      \"orderId\": \"{{currentOrderId}}\",\n      \"correlationId\": \"\",\n      \"invoiceStatus\": \"Posted\",\n      \"targetDate\": \"{{TODAY_YYYY-MM-DD}}\",\n      \"invoiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n      \"billToContactId\": \"{{defaultBillToContactId}}\"\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/actions/standard/createInvoiceFromOrder",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/invoices?meta=Create%2Binvoices%2Bfrom%2Ban%2Border\n- API Type: Invocable action\n- Call Type: Asynchronous\n- Event: InvoiceProcessedEvent"
+					},
+					"response": []
+				},
+				{
+					"name": "Get The latest Invoice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0830dd4-aeed-4451-a928-21f1b2a28d0e",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentInvoiceId = responseData.records[0].Id;",
+									"    postman.setEnvironmentVariable(\"currentInvoiceId\", currentInvoiceId);",
+									"    console.log(`Set Env value - currentInvoiceId: ${postman.getEnvironmentVariable(\"currentInvoiceId\")}`)",
+									"",
+									"}catch(error){}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "6bbb88ce-db3d-4198-90b7-5281eeea2c47",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/query?q=Select Id,  DocumentNumber from Invoice Where BillingAccountId = '{{defaultAccountId}}' AND Status = 'Posted' ORDER BY CreatedDate DESC LIMIT 1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select Id,  DocumentNumber from Invoice Where BillingAccountId = '{{defaultAccountId}}' AND Status = 'Posted' ORDER BY CreatedDate DESC LIMIT 1"
+								}
+							]
+						},
+						"description": "Better to use InvoiceProcessedEvent when you use `Create Invoice From Order`"
+					},
+					"response": []
+				},
+				{
+					"name": "Link current Invoice to Current Order",
+					"_postman_id": "d2e66325-bc5c-41f4-967e-85bebd82b46f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"ReferenceEntityId\" : \"{{currentOrderId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/sobjects/invoice/{{currentInvoiceId}}"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "01a48678-e300-4d70-8b10-0b42b9a0635e"
+		},
+		{
+			"name": "Invoices Scheduler",
+			"item": [
+				{
+					"name": "Invoice Recovery",
+					"_postman_id": "8ffa9ff0-3953-4bda-9e3e-978de6e33b38",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"billingSchedules\": {\n        \"billingScheduleIds\": {{currentBillingSchedules}}\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/billing/billing-schedules/actions/recover"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "135c2f40-7e60-46d6-be23-050b42d206cc"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get Current OrderId from Current QuoteId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e343f191-5348-483a-8985-f25ce15aa6aa",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentOrderId = responseData.records[0].Id;",
+									"    postman.setEnvironmentVariable(\"currentOrderId\", currentOrderId);",
+									"    console.log(`Set Env value - currentOrderId: ${postman.getEnvironmentVariable(\"currentOrderId\")}`);",
+									"    const currentOrderItems = responseData.records[0].OrderItems.records.map(oi => oi.Id)",
+									"    postman.setEnvironmentVariable(\"currentOrderItems\", JSON.stringify(currentOrderItems));",
+									"    console.log(`Set Env value - currentOrderItems: ${postman.getEnvironmentVariable(\"currentOrderItems\")}`)",
+									"",
+									"}catch(error){",
+									"    console.error(error);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "ecd45df8-5035-43f2-a950-376a5aaaaf8b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, OrderNumber, Status, (Select Id, Product2Id, Product2.Name, NetUnitPrice, Quantity, TotalPrice from OrderItems) from Order WHERE QuoteId = '{{currentQuoteId}}'",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, OrderNumber, Status, (Select Id, Product2Id, Product2.Name, NetUnitPrice, Quantity, TotalPrice from OrderItems) from Order WHERE QuoteId = '{{currentQuoteId}}'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Order",
+					"_postman_id": "ba0d2200-5055-4e86-a380-0bd54f8bf64d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"BillToContactId\": \"{{defaultBillToContactId}}\",\n    \"Status\" : \"Activated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/sobjects/order/{{currentOrderId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create an order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"currentOrderId\", jsonData['compositeResponse'][0]['body']['id']);",
+									"console.info(\"currentOrderId\", pm.environment.get(\"currentOrderId\"));",
+									"",
+									"const getOrderItemIds = (ois) => {",
+									"    return ois.map((oi) => {",
+									"        return oi.body.id",
+									"    })",
+									"}",
+									"",
+									"const currentOrderItems = [",
+									"    ...getOrderItemIds(jsonData['compositeResponse'].filter(r => r['referenceId'] === 'refOrderItem1_evergreen')),",
+									"    ...getOrderItemIds(jsonData['compositeResponse'].filter(r => r['referenceId'] === 'refOrderItem2_oneTime')),",
+									"    ...getOrderItemIds(jsonData['compositeResponse'].filter(r => r['referenceId'] === 'refOrderItem3_termMonthly'))",
+									"];",
+									"postman.setEnvironmentVariable(\"currentOrderItems\", JSON.stringify(currentOrderItems));",
+									"console.info(\"currentOrderItems\", pm.environment.get(\"currentOrderItems\"));"
+								],
+								"type": "text/javascript",
+								"id": "8783ce5d-c136-4821-929a-2e72c01dbd9c"
+							}
+						}
+					],
+					"_postman_id": "958bc938-5483-4cdb-bd62-b66fb5042972",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Order\",\n            \"referenceId\": \"refOrder\",\n            \"body\": {\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                \"Pricebook2Id\": \"{{defaultPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"Status\": \"Draft\",\n                \"ShippingCountry\": \"{{defaultAccountShippingCountry}}\",\n                \"ShippingState\": \"{{defaultAccountShippingState}}\",\n                \"ShippingCity\": \"{{defaultAccountShippingCity}}\",\n                \"ShippingStreet\": \"{{defaultAccountShippingStreet}}\",\n                \"ShippingPostalCode\": \"{{defaultAccountShippingPostalCode}}\",\n                \"BillingCountry\": \"{{defaultAccountBillingCountry}}\",\n                \"BillingState\": \"{{defaultAccountBillingState}}\",\n                \"BillingCity\": \"{{defaultAccountBillingCity}}\",\n                \"BillingStreet\": \"{{defaultAccountBillingStreet}}\",\n                \"BillingPostalCode\": \"{{defaultAccountBillingPostalCode}}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/AppUsageAssignment\",\n            \"referenceId\": \"refAppTag\",\n            \"body\": {\n                \"AppUsageType\": \"SubscriptionManagement\",\n                \"RecordId\": \"@{refOrder.id}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderAction\",\n            \"referenceId\": \"refOrderAction\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"Type\": \"New Sale\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem1_oneTime\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultOneTimePBE}}\",\n                \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                \"Quantity\": 5,\n                \"UnitPrice\": 100000,\n                \"NetUnitPrice\": 100000,\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem2_termMonthly\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultTermMonthlyPBE}}\",\n                \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                \"EndDate\": \"{{1Y_ENDDATE_YYYY-MM-DD}}\",\n                \"PricingTermCount\": 12,\n                \"Quantity\": 5,\n                \"UnitPrice\": 50000,\n                \"NetUnitPrice\": 50000,\n                \"TotalLineAmount\": 3000000,\n                \"PeriodBoundary\": \"Anniversary\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem3_evergreen\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultEvergreenPBE}}\",\n                \"ServiceDate\": \"{{TODAY_YYYY-MM-DD}}\",\n                \"Quantity\": 5,\n                \"UnitPrice\": 10000,\n                \"NetUnitPrice\": 10000,\n                \"ListPriceTotal\": 50000,\n                \"TotalLineAmount\": 50000,\n                \"PeriodBoundary\": \"Anniversary\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/composite",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/orders?meta=Create%2Ban%2Border\nAPI Type: Composite\nCall Type: Synchronous\nEvent: none"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "7403f900-0b3c-4591-8e5a-3966dfc4e573"
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "Get Default Payment Method",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4562a8e-6829-4c70-bfbd-4d4bb6fdb100",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"let responseData;",
+									"let cardPaymentMethod;",
+									"pm.test(\"The response contains records array with expected number of elements\", function () {",
+									"    responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.records).to.exist;",
+									"    pm.expect(responseData.records).to.be.an('array');",
+									"    pm.expect(responseData.records.length).to.equal(1, \"Expected number of elements is 1\");",
+									"    cardPaymentMethod = responseData.records[0];",
+									"    postman.setEnvironmentVariable(\"defaultPaymentMethodId\", cardPaymentMethod.Id);",
+									"    console.log(`Set Env value - defaultPaymentMethodId: ${postman.getEnvironmentVariable(\"defaultPaymentMethodId\")}`);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "c202db27-6422-45ac-a716-d9ba8919a41c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=SELECT Id, CardHolderName, AccountId, Status FROM CardPaymentMethod WHERE Status = 'Active' AND AccountId = '{{defaultAccountId}}' AND CardHolderName = '{{defaultContactName}}' ORDER BY CreatedDate DESC LIMIT 1",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, CardHolderName, AccountId, Status FROM CardPaymentMethod WHERE Status = 'Active' AND AccountId = '{{defaultAccountId}}' AND CardHolderName = '{{defaultContactName}}' ORDER BY CreatedDate DESC LIMIT 1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment Method",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e2844f72-2e51-44af-a1f6-10489dc05d54",
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Payment method object should have accountId, id, and status fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.paymentMethod).to.exist;",
+									"",
+									"    const paymentMethod = responseData.paymentMethod;",
+									"",
+									"    pm.expect(paymentMethod.accountId).to.exist;",
+									"    pm.expect(paymentMethod.id).to.exist;",
+									"    pm.expect(paymentMethod.status).to.exist;",
+									"    ",
+									"    postman.setEnvironmentVariable(\"defaultPaymentMethodId\", paymentMethod.id);",
+									"    console.log(`Set Env value - defaultPaymentMethodId: ${postman.getEnvironmentVariable(\"defaultPaymentMethodId\")}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "f356d0c1-f5f7-4b44-af22-39a2d40dee49",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"{{defaultContactName}}\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2023\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"{{defaultContactName}}-Visa\",\n    \"accountId\": \"{{defaultAccountId}}\"\n    },\n  \"phone\": \"4155551212\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/payment-methods"
+					},
+					"response": []
+				},
+				{
+					"name": "Make a payment sale",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "80ac165d-3391-413d-9e25-abf0bc39425e",
+								"exec": [
+									"const responseData = pm.response.json();"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "63060ede-eb44-4dd6-b245-12d0a4f33a35",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"amount\": 880000,\n            \"paymentGatewayId\": \"{{defaultPaymentGatewayId}}\",\n            \"paymentMethodId\": \"{{defaultPaymentMethodId}}\",\n            \"currencyIsoCode\": \"JPY\",\n            \"idempotencyKey\": \"{{defaultAccountId}}\",\n            \"accountId\": \"{{defaultAccountId}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/actions/standard/paymentSale",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/payments?meta=Make%2Ba%2Bpayment%2Bsale\n- API Type: Invocable action\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Make a payment sale ( + Capture) [Sale API]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "80ac165d-3391-413d-9e25-abf0bc39425e",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    postman.setEnvironmentVariable(\"currentPaymentId\", responseData['payment']['id']);",
+									"    console.log(`Set Env value - currentPaymentId: ${postman.getEnvironmentVariable(\"currentPaymentId\")}`)",
+									"}catch(error) {}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "6a3502b7-e8d2-4e34-bee4-f978c9677072",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": \"{{defaultAccountId}}\",\n    \"amount\": 880000,\n    \"comments\": \"DG\",\n    \"currencyIsoCode\": \"JPY\",\n    \"effectiveDate\": \"{{NOW_DATETIME_ISO}}\",\n    \"paymentGatewayId\": \"{{defaultPaymentGatewayId}}\",\n    \"paymentMethod\": {\n        \"id\": \"{{defaultPaymentMethodId}}\"\n    },\n    \"phone\": \"100-456-67\",\n    \"email\": \"{{_userEmail}}\",\n    \"additionalData\": {\n        \"key1\": \"value1\",\n        \"key2\": \"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/sales",
+						"description": "- https://developer.salesforce.com/docs/atlas.en-us.chatterapi.meta/chatterapi/connect_resources_payment_sale.htm\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Payment",
+					"_postman_id": "2ed1f6e9-b33a-402d-8707-87e544b2d51f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 2000,\n    \"appliedToId\": \"{{currentInvoiceId}}\",\n    \"effectiveDate\": \"{{NOW_DATETIME_ISO}}\",\n    \"comments\": \"Payment Apply\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/billing/payments/{{currentPaymentId}}/actions/apply",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/payments?meta=Apply%2Ba%2Bpayment\n- API Type: Invocable action\n- Call Type: Synchronous\n- Event: none\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Unapply Payment",
+					"_postman_id": "d95c03ff-1dfb-4b24-b607-e17766f771ee",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \n   \"effectiveDate\":\"{{NOW_DATETIME_ISO}}\",\n   \"comments\":\"Payment Unapply\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/billing/paymentlines/[PaymentLineInvoiceId]/actions/unapply",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/payments?meta=Unapply%2Bpayment%2Bline%2Bfrom%2Binvoice\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Refund Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a55ebbde-828e-4f16-984e-2127f06c7286",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    postman.setEnvironmentVariable(\"currentRefundId\", responseData.refund.id);",
+									"    console.log(`Set Env value - currentRefundId: ${postman.getEnvironmentVariable(\"currentRefundId\")}`)",
+									"}catch(error) {}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "bc026b74-c953-4c11-9c50-73fa8d2699f5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"{{NOW_DATETIME_ISO}}\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/payments/{{currentPaymentId}}/refunds"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Refund",
+					"_postman_id": "59156e67-9024-437a-9da7-b618e17bbbc0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appliedToId\": \"{{currentPaymentId}}\",\n    \"amount\": 10,\n    \"effectiveDate\": \"{{NOW_DATETIME_ISO}}\",\n    \"comments\": \"apply payment\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/billing/refunds/{{currentRefundId}}/actions/apply",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/payments/v56.0?meta=Apply%2Ba%2Brefund%2Bto%2Ba%2Bpayment\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				},
+				{
+					"name": "Authorize Payment",
+					"_postman_id": "7f733d05-3265-4dc7-84c7-6aca10a797f3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"currencyIsoCode\":\"JPY\",\n  \"effectiveDate\":\"{{NOW_DATETIME_ISO}}\",\n  \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n  \"paymentMethod\": {\"id\": \"{{defaultPaymentMethodId}}\"},\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/authorizations",
+						"description": "If payment method already exists, paymentMethodId can given instead of paymentMethod"
+					},
+					"response": []
+				},
+				{
+					"name": "Reverse Payment Authorization",
+					"_postman_id": "b9c28a1d-8321-4238-aab9-5b86cb6b4178",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\":\"{{accountId}}\",\n  \"amount\": 10,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"{{NOW_DATETIME_ISO}}\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/authorizations/0XcB0000000bvS8KAI/reversals",
+						"description": "If payment method already exists, paymentMethodId can given instead of paymentMethod"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "364fe113-2502-4782-9272-fef87253aa34"
+		},
+		{
+			"name": "Pricing",
+			"item": [
+				{
+					"name": "Calculate Price",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5bf0cc8e-7f14-4c20-99f6-7e0bdfa6c30a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad53c712-1922-4ccc-9661-1a41801d58aa",
+								"exec": [
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>Type</th>",
+									"        <th>referenceId</th>",
+									"        <th>Account ID</th>",
+									"        <th>Total Product Amount</th>",
+									"        <th>Total Amount</th>",
+									"        <th>Currency ISO Code</th>",
+									"        <th>Total List Amount</th>",
+									"        <th>Total Adjustment Amount</th>",
+									"        <th>Total Adjustment Dist Amount</th>",
+									"        <th>SalesTransaction Id</th>",
+									"        <th>Adjustment Type</th>",
+									"        <th>Adjustment Value</th>",
+									"        <th>Adjustment Source</th>",
+									"    </tr>",
+									"    ",
+									"    {{#each response.headerRecords}}",
+									"        <tr>",
+									"            <td>{{type}}</td>",
+									"            <td>{{referenceId}}</td>",
+									"            <td>{{AccountId}}</td>",
+									"            <td>{{TotalProductAmount}}</td>",
+									"            <td>{{TotalAmount}}</td>",
+									"            <td>{{CurrencyIsoCode}}</td>",
+									"            <td>{{TotalListAmount}}</td>",
+									"            <td>{{TotalAdjustmentAmount}}</td>",
+									"            <td>{{TotalAdjustmentDistAmount}}</td>",
+									"            <td>{{SalesTransactionId}}</td>",
+									"            <td>{{AdjustmentType}}</td>",
+									"            <td>{{AdjustmentValue}}</td>",
+									"            <td>{{AdjustmentSource}}</td>",
+									"        </tr>",
+									"    {{/each}}",
+									"</table>",
+									"",
+									"<br>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>Type</th>",
+									"        <th>referenceId</th>",
+									"        <th>SalesItemType</th>",
+									"        <th>SalesTransactionItemId</th>",
+									"        <th>ProductId</th>",
+									"        <th>StockKeepingUnit</th>",
+									"        <th>StartingUnitPriceSource</th>",
+									"        <th>ProrationPolicyId</th>",
+									"        <th>ListPrice</th>",
+									"        <th>SubscriptionTerm</th>",
+									"        <th>StartDate</th>",
+									"        <th>ProductSellingModelId</th>",
+									"        <th>PeriodBoundaryStartMonth</th>",
+									"        <th>TotalLineAmount</th>",
+									"        <th>ListPriceTotal</th>",
+									"        <th>BillingFrequency</th>",
+									"        <th>StartingPriceTotal</th>",
+									"        <th>Quantity</th>",
+									"        <th>PeriodBoundary</th>",
+									"        <th>SalesTransactionId</th>",
+									"        <th>NetUnitPrice</th>",
+									"        <th>StartingUnitPrice</th>",
+									"        <th>PricebookEntryId</th>",
+									"        <th>TotalAdjustmentDistAmount</th>",
+									"        <th>TotalAdjustmentAmount</th>",
+									"        <th>TotalPrice</th>",
+									"        <th>TotalAmount</th>",
+									"        <th>AdjustmentType</th>",
+									"        <th>AdjustmentValue</th>",
+									"        <th>AdjustmentSource</th>",
+									"    </tr>",
+									"    ",
+									"    {{#each response.items}}",
+									"        <tr>",
+									"            <td>{{type}}</td>",
+									"            <td>{{referenceId}}</td>",
+									"            <td>{{SalesItemType}}</td>",
+									"            <td>{{SalesTransactionItemId}}</td>",
+									"            <td>{{ProductId}}</td>",
+									"            <td>{{StockKeepingUnit}}</td>",
+									"            <td>{{StartingUnitPriceSource}}</td>",
+									"            <td>{{ProrationPolicyId}}</td>",
+									"            <td>{{ListPrice}}</td>",
+									"            <td>{{SubscriptionTerm}}</td>",
+									"            <td>{{StartDate}}</td>",
+									"            <td>{{ProductSellingModelId}}</td>",
+									"            <td>{{PeriodBoundaryStartMonth}}</td>",
+									"            <td>{{TotalLineAmount}}</td>",
+									"            <td>{{ListPriceTotal}}</td>",
+									"            <td>{{BillingFrequency}}</td>",
+									"            <td>{{StartingPriceTotal}}</td>",
+									"            <td>{{Quantity}}</td>",
+									"            <td>{{PeriodBoundary}}</td>",
+									"            <td>{{NetUnitPrice}}</td>",
+									"            <td>{{StartingUnitPrice}}</td>",
+									"            <td>{{PricebookEntryId}}</td>",
+									"            <td>{{TotalAdjustmentDistAmount}}</td>",
+									"            <td>{{TotalAdjustmentAmount}}</td>",
+									"            <td>{{TotalPrice}}</td>",
+									"            <td>{{TotalAmount}}</td>",
+									"            <td>{{AdjustmentType}}</td>",
+									"            <td>{{AdjustmentValue}}</td>",
+									"            <td>{{AdjustmentSource}}</td>",
+									"        </tr>",
+									"    {{/each}}",
+									"</table>",
+									"`;",
+									"",
+									"const constructVisualizerPayload = () => {",
+									"    const res = pm.response.json();",
+									"    const headerRecords = [",
+									"        ...filterAndExactData(res.records, 'SalesTransaction'),",
+									"        ...filterAndExactData(res.records, 'PriceAdjustmentGroup')",
+									"    ];",
+									"",
+									"    const salesTransactionitems = filterAndExactData(res.records, 'SalesTransactionItem');",
+									"    const priceAdjustmentItems = filterAndExactData(res.records, 'PriceAdjustmentItem');",
+									"    const items = [];",
+									"    for(const sti of salesTransactionitems){",
+									"        items.push(sti);",
+									"        for(const pai of priceAdjustmentItems.filter(p => p.SalesTransactionItemId === `@{` + sti.referenceId + `.Id}`)){",
+									"            items.push(pai);",
+									"        }",
+									"    }",
+									"",
+									"    console.log('headerRecords:', headerRecords);",
+									"    console.log('items:', items);",
+									"    return { headerRecords, items };",
+									"}",
+									"",
+									"const filterAndExactData = (records, attributeType) => {",
+									"    return records",
+									"        .filter(r => r.record.attributes.type === attributeType)",
+									"        .map(r => exactData(r));",
+									"}",
+									"",
+									"const exactData = (record)  => {",
+									"    let dataObj = JSON.parse(JSON.stringify(record.record));",
+									"    dataObj.referenceId = record.referenceId;",
+									"    dataObj.type = record.record.attributes.type;",
+									"    delete dataObj.attributes;",
+									"    return dataObj; ",
+									"}",
+									"",
+									"pm.visualizer.set(template, {response: constructVisualizerPayload()});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "71094f16-d10f-4aae-8054-565a0ab1b494",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"listPricebookId\": \"{{standardPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{defaultPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"roundingMode\": \"RoundHalfDown\",\n    \"startDate\": \"{{TODAY_YYYY-MM-DD}}\",\n    \"subscriptionTerm\": 12,\n    \"graph\": {\n        \"graphId\": 1,\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"AccountId\": \"{{defaultAccountId}}\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultEvergreenProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultEvergreenPSM}}\",\n                    \"Quantity\": 10.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item2\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultTermMonthlyProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultTermMonthlyPSM}}\",\n                    // \"endDate\": \"{{1Y_ENDDATE_YYYY-MM-DD}}\",\n                    \"SubscriptionTerm\": 12,\n                    \"Quantity\": 10.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item3\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultOneTimeProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultOneTimePSM}}\",\n                    \"Quantity\": 30.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_price_adjustment_group1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentGroup\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-10\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_PriceAdjustmentItem1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item1.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-20\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_PriceAdjustmentItem2\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"CurrencyIsoCode\": \"JPY\",\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item2.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-20\"\n                }\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/commerce/pricing/salestransaction/actions/calculate-price",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/prices/v56.0?meta=Calculate%2Bprice\n- API Type: Connect REST API\n- Call Type: Synchronous\n- Event: none"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "17a0ba6d-86de-4d35-be18-22f30cadd457"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get Products(SOQL)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c47c18d9-8ba1-4604-86cc-d17ee3131cc8",
+								"exec": [
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>PriceBook</th>",
+									"        <th>Product ID</th>",
+									"        <th>Product</th>",
+									"        <th>ProductCode</th>",
+									"        <th>SKU</th>",
+									"        <th>TaxPolicy</th>",
+									"        <th>BillingPolicy</th>",
+									"        <th>ProductSellingModel ID</th>",
+									"        <th>ProductSellingModel</th>",
+									"        <th>SellingModelType</th>",
+									"        <th>PricingTerm</th>",
+									"        <th>PricingTermUnit</th>",
+									"        <th>UnitPrice</th>",
+									"    </tr>",
+									"    ",
+									"    {{#each response}}",
+									"        <tr>",
+									"            <td>{{Pricebook2.Name}}</td>",
+									"            <td>{{Product2Id}}</td>",
+									"            <td>{{Product2.Name}}</td>",
+									"            <td>{{Product2.ProductCode}}</td>",
+									"            <td>{{Product2.StockKeepingUnit}}</td>",
+									"            <td>{{Product2.TaxPolicy.Name}}</td>",
+									"            <td>{{Product2.BillingPolicy.Name}}</td>",
+									"            <td>{{ProductSellingModelId}}</td>",
+									"            <td>{{ProductSellingModel.Name}}</td>",
+									"            <td>{{ProductSellingModel.SellingModelType}}</td>",
+									"            <td>{{ProductSellingModel.PricingTerm}}</td>",
+									"            <td>{{ProductSellingModel.PricingTermUnit}}</td>",
+									"            <td>{{UnitPrice}}</td>",
+									"        </tr>",
+									"    {{/each}}",
+									"</table>",
+									"`;",
+									"",
+									"const constructVisualizerPayload = () => {    ",
+									"    const responseData = pm.response.json();",
+									"    return responseData.records || [];",
+									"}",
+									"",
+									"pm.visualizer.set(template, {response: constructVisualizerPayload()});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "02e76ceb-2cf8-411a-ab6b-9f79c6717a0e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/query?q=SELECT Id, Pricebook2Id, Pricebook2.Name, Product2Id, Product2.Name, Product2.ProductCode, Product2.CurrencyIsoCode, Product2.StockKeepingUnit, Product2.TaxPolicy.Name, Product2.BillingPolicy.Name, ProductCode, UnitPrice, IsActive, ProductSellingModelId, ProductSellingModel.Name, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, ProductSellingModel.SellingModelType, CurrencyIsoCode FROM PricebookEntry WHERE IsActive = true AND  Pricebook2.isActive = true AND Product2.isActive = true AND ProductSellingModelId != null AND  Product2.TaxPolicyId != null AND  Product2.BillingPolicyId != null  AND Pricebook2Id = '{{defaultPricebookId}}' ORDER BY Product2.ProductCode",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "SELECT Id, Pricebook2Id, Pricebook2.Name, Product2Id, Product2.Name, Product2.ProductCode, Product2.CurrencyIsoCode, Product2.StockKeepingUnit, Product2.TaxPolicy.Name, Product2.BillingPolicy.Name, ProductCode, UnitPrice, IsActive, ProductSellingModelId, ProductSellingModel.Name, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, ProductSellingModel.SellingModelType, CurrencyIsoCode FROM PricebookEntry WHERE IsActive = true AND  Pricebook2.isActive = true AND Product2.isActive = true AND ProductSellingModelId != null AND  Product2.TaxPolicyId != null AND  Product2.BillingPolicyId != null  AND Pricebook2Id = '{{defaultPricebookId}}' ORDER BY Product2.ProductCode"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Information",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c47c18d9-8ba1-4604-86cc-d17ee3131cc8",
+								"exec": [
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>PriceBook</th>",
+									"        <th>Product ID</th>",
+									"        <th>Product</th>",
+									"        <th>ProductCode</th>",
+									"        <th>SKU</th>",
+									"        <th>TaxPolicy</th>",
+									"        <th>BillingPolicy</th>",
+									"        <th>ProductSellingModel ID</th>",
+									"        <th>ProductSellingModel</th>",
+									"        <th>SellingModelType</th>",
+									"        <th>PricingTerm</th>",
+									"        <th>PricingTermUnit</th>",
+									"        <th>UnitPrice</th>",
+									"    </tr>",
+									"    ",
+									"    {{#each response}}",
+									"        <tr>",
+									"            <td>{{Pricebook2.Name}}</td>",
+									"            <td>{{Product2Id}}</td>",
+									"            <td>{{Product2.Name}}</td>",
+									"            <td>{{Product2.ProductCode}}</td>",
+									"            <td>{{Product2.StockKeepingUnit}}</td>",
+									"            <td>{{Product2.TaxPolicy.Name}}</td>",
+									"            <td>{{Product2.BillingPolicy.Name}}</td>",
+									"            <td>{{ProductSellingModelId}}</td>",
+									"            <td>{{ProductSellingModel.Name}}</td>",
+									"            <td>{{ProductSellingModel.SellingModelType}}</td>",
+									"            <td>{{ProductSellingModel.PricingTerm}}</td>",
+									"            <td>{{ProductSellingModel.PricingTermUnit}}</td>",
+									"            <td>{{UnitPrice}}</td>",
+									"        </tr>",
+									"    {{/each}}",
+									"</table>",
+									"`;",
+									"",
+									"const constructVisualizerPayload = () => {    ",
+									"    const responseData = pm.response.json();",
+									"    return responseData.records || [];",
+									"}",
+									"",
+									"pm.visualizer.set(template, {response: constructVisualizerPayload()});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "3254a3a7-f04c-4e82-83af-ff6492968052",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productContexts\": [\n        {\n            \"product2Id\": \"{{defaultOneTimeProductId}}\",\n            \"productSellingModelId\": \"{{defaultOneTimePSM}}\"\n        },\n        {\n            \"product2Id\": \"{{defaultTermMonthlyProductId}}\",\n            \"productSellingModelId\": \"{{defaultTermMonthlyPSM}}\"\n        },\n        {\n            \"product2Id\": \"{{defaultEvergreenProductId}}\",\n            \"productSellingModelId\": \"{{defaultEvergreenPSM}}\"\n        }\n    ],\n    \"fields\": [\n        \"id\",\n        \"name\",\n        \"IsActive\",\n        \"ProductCode\"\n    ],\n    \"retrievalType\": \"IncludeChildComponents\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/services/data/v{{version}}/commerce/catalog-products/actions/get-products",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/products/v58.0?meta=Request%2BProduct%2BInformation\n"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "7c384933-0431-4857-8aab-7dcf47348b0a"
+		},
+		{
+			"name": "Quotes",
+			"item": [
+				{
+					"name": "Create a quote",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5bf0cc8e-7f14-4c20-99f6-7e0bdfa6c30a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5629ddb-f4df-46d4-939c-dcbee736fc54",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentQuoteId = responseData.compositeResponse.filter(d => d.referenceId === 'refQuote')[0].body.id;",
+									"    postman.setEnvironmentVariable(\"currentQuoteId\", currentQuoteId);",
+									"    console.log(`Set Env value - currentQuoteId: ${postman.getEnvironmentVariable(\"currentQuoteId\")}`);",
+									"}catch(error){",
+									"    console.error(error);",
+									"    console.error(responseData);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "f75dc92f-60d3-4d93-bba2-72d59802cad4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Quote\",\n            \"referenceId\": \"refQuote\",\n            \"body\": {\n                \"Name\": \"Example Quote created via API - {{NOW_DATETIME_ISO}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"QuoteAccountId\": \"{{defaultAccountId}}\",\n                \"Pricebook2Id\": \"{{defaultPricebookId}}\",\n                \"Status\": \"Accepted\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/QuoteLineItem\",\n            \"referenceId\": \"refQuoteLineItem1\",\n            \"body\": {\n                \"QuoteId\": \"@{refQuote.id}\",\n                \"Product2Id\": \"{{defaultOneTimeProductId}}\",\n                \"PricebookEntryId\": \"{{defaultOneTimePBE}}\",\n                \"Quantity\": 10.0,\n                \"UnitPrice\": 5000\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/QuoteLineItem\",\n            \"referenceId\": \"refQuoteLineItem2\",\n            \"body\": {\n                \"QuoteId\": \"@{refQuote.id}\",\n                \"Product2Id\": \"{{defaultTermMonthlyProductId}}\",\n                \"PricebookEntryId\": \"{{defaultTermMonthlyPBE}}\",\n                \"Quantity\": 10.0,\n                \"UnitPrice\": 10000,\n                \"BillingFrequency\": \"Monthly\",\n                \"SubscriptionTerm\": 12,\n                \"StartDate\": \"{{TODAY_YYYY-MM-DD}}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/QuoteLineItem\",\n            \"referenceId\": \"refQuoteLineItem3\",\n            \"body\": {\n                \"QuoteId\": \"@{refQuote.id}\",\n                \"Product2Id\": \"{{defaultEvergreenProductId}}\",\n                \"PricebookEntryId\": \"{{defaultEvergreenPBE}}\",\n                \"Quantity\": 10.0,\n                \"UnitPrice\": 10000,\n                \"BillingFrequency\": \"Monthly\",\n                \"StartDate\": \"{{TODAY_YYYY-MM-DD}}\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/composite",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/quotes?meta=Create%2Ba%2Bquote\n- API Type: Composite\n- Call Type: Synchronous"
+					},
+					"response": []
+				},
+				{
+					"name": "Create an order from a quote",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5bf0cc8e-7f14-4c20-99f6-7e0bdfa6c30a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5629ddb-f4df-46d4-939c-dcbee736fc54",
+								"exec": [
+									"const responseData = pm.response.json();",
+									"try{",
+									"    const currentQuoteId = responseData.compositeResponse.filter(d => d.referenceId === 'refQuote')[0].body.id;",
+									"    postman.setEnvironmentVariable(\"currentQuoteId\", currentQuoteId);",
+									"    console.log(`Set Env value - currentQuoteId: ${postman.getEnvironmentVariable(\"currentQuoteId\")}`);",
+									"}catch(error){",
+									"    console.error(error);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "70ab0dec-c48f-4b4d-9a8c-dcc5563d65d2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"quoteRecordId\": \"{{currentQuoteId}}\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}{{site}}/services/data/v{{version}}/actions/standard/createOrderFromQuote",
+						"description": "- https://developer.salesforce.com/docs/revenue/subscription-management/references/quotes?meta=Create%2Ban%2Border%2Bfrom%2Ba%2Bquote\n- API Type: Invocable action\n- Call Type: Asynchronous"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "94cc84df-193d-4636-98b2-3b93ea658800"
+		},
+		{
+			"name": "Error Logs",
+			"item": [
+				{
+					"name": "Get Revenue Transaction Errors",
+					"_postman_id": "9ea46155-3e31-41c2-b76b-c4399c274560",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select ErrorCode, ErrorLogNumber, ErrorMessage, OwnerId, PrimaryRecordId, RelatedRecordId  from RevenueTransactionErrorLog Where PrimaryRecordId = '02iB0000000ycqMIAQ'",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select ErrorCode, ErrorLogNumber, ErrorMessage, OwnerId, PrimaryRecordId, RelatedRecordId  from RevenueTransactionErrorLog Where PrimaryRecordId = '02iB0000000ycqMIAQ'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Revenue Transaction Errors- All",
+					"_postman_id": "24188aab-5fee-4af9-bae0-fd954d981426",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select ErrorCode, ErrorLogNumber, ErrorMessage, OwnerId, PrimaryRecordId, RelatedRecordId  from RevenueTransactionErrorLog",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"query"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Select ErrorCode, ErrorLogNumber, ErrorMessage, OwnerId, PrimaryRecordId, RelatedRecordId  from RevenueTransactionErrorLog"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "f04698d6-de88-4578-87c9-9c72e808b72b"
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": {
+			"accessTokenUrl": "{{url}}/services/oauth2/token",
+			"password": "{{password}}",
+			"client_authentication": "body",
+			"headerPrefix": "Bearer",
+			"grant_type": "password_credentials",
+			"scope": "",
+			"tokenType": "Bearer",
+			"accessToken": "{{_accessToken}}",
+			"tokenName": "Salesforce",
+			"username": "{{username}}",
+			"clientSecret": "{{clientSecret}}",
+			"authUrl": "{{url}}{{site}}/services/oauth2/authorize",
+			"clientId": "{{clientId}}",
+			"useBrowser": true,
+			"addTokenTo": "header"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const formatDate = (dt) => {",
+					"    var y = dt.getFullYear();",
+					"    var m = ('00' + (dt.getMonth() + 1)).slice(-2);",
+					"    var d = ('00' + dt.getDate()).slice(-2);",
+					"    return (y + '-' + m + '-' + d);",
+					"};",
+					"",
+					"pm.collectionVariables.set(\"TODAY_YYYY-MM-DD\", formatDate(new Date()));",
+					"",
+					"let enddate = new Date();",
+					"enddate.setYear(enddate.getFullYear() + 1)",
+					"enddate.setDate(enddate.getDate() - 1);",
+					"pm.collectionVariables.set(\"1Y_ENDDATE_YYYY-MM-DD\", formatDate(enddate));",
+					"",
+					"pm.collectionVariables.set(\"NOW_DATETIME_ISO\", new Date().toISOString());"
+				],
+				"id": "641711ab-a157-452d-967a-48749817719e"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "442c2ff8-1b0d-455a-a12d-118cb11c8e06"
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "dc0a85d8-84ae-480f-9754-d4562baec3df",
+			"key": "TODAY_YYYY-MM-DD",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "667c3460-f508-4d87-931e-bbf307b36669",
+			"key": "1Y_ENDDATE_YYYY-MM-DD",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "f473b3b6-f821-405e-8a01-aa69efc9108b",
+			"key": "NOW_DATETIME_ISO",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
